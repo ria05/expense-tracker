@@ -1,4 +1,4 @@
-# Codex Prompt Templates
+# Codex Prompt 
 
 ## 1. New Feature
 - **Context:** We are building a React expense tracker using Vite. The app currently [describe current state].

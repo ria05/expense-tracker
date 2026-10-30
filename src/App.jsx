@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ExpenseForm from './components/ExpenseForm.jsx'
+import ExpenseList from './components/ExpenseList.jsx'
 import './App.css'
 
 const currency = new Intl.NumberFormat('en-IN', {
@@ -16,6 +17,12 @@ function App() {
       { ...expense, id: crypto.randomUUID() },
       ...currentExpenses,
     ])
+  }
+
+  function handleDeleteExpense(expenseId) {
+    setExpenses((currentExpenses) =>
+      currentExpenses.filter((expense) => expense.id !== expenseId),
+    )
   }
 
   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0)
@@ -69,20 +76,10 @@ function App() {
               <p>Your expenses will show up here once you add one.</p>
             </div>
           ) : (
-            <ul className="expense-list" aria-live="polite">
-              {expenses.map((expense) => (
-                <li className="expense-row" key={expense.id}>
-                  <span className={`category-icon category-${expense.category.toLowerCase()}`} aria-hidden="true">
-                    {expense.category === 'Food' ? '⌁' : expense.category === 'Travel' ? '↗' : expense.category === 'Bills' ? '▤' : '◦'}
-                  </span>
-                  <span className="expense-details">
-                    <span className="expense-title">{expense.title}</span>
-                    <span className="expense-meta">{expense.category} · {expense.date}</span>
-                  </span>
-                  <span className="expense-amount">−{currency.format(expense.amount)}</span>
-                </li>
-              ))}
-            </ul>
+            <ExpenseList
+              expenses={expenses}
+              onDeleteExpense={handleDeleteExpense}
+            />
           )}
         </section>
       </div>

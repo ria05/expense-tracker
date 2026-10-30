@@ -359,6 +359,28 @@
   white-space: nowrap;
 }
 
+.delete-button {
+  padding: 6px 8px;
+  border: 1px solid #f0dede;
+  border-radius: 7px;
+  color: #a14848;
+  background: #fff;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 650;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.delete-button:hover {
+  border-color: #e8c2c2;
+  background: #fff7f7;
+}
+
+.delete-button:focus-visible {
+  outline: 3px solid #b5363638;
+  outline-offset: 2px;
+}
+
 .app-footer {
   padding-top: 22px;
   color: #a0a8a2;
