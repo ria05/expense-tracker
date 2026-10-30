@@ -28,4 +28,4 @@
 ## 4. Strict Rules
 - **Dependencies:** No new packages or dependencies may be installed without asking first[cite: 2].
 - **Branching Workflow:** Always work on a dedicated feature branch; never commit or push directly to `main`[cite: 1, 2].
-- **Pull Requests:** Summarize all changes clearly for every pull request and ensure code passes review before merging[cite: 1, 2].
+- **Pull Requests:** Summarize all changes clearly for every pull request and ensure code passes review before merging[cite: 1, 2]. 
