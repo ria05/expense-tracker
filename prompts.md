@@ -58,3 +58,52 @@
   - *Valid Input:* Title: "Flight", Amount: "4500", Category: "Travel" -> Adds successfully.
   - *Invalid Input:* Title: "", Amount: "100", Category: "Bills" -> Blocked due to empty title.
   - *Invalid Input:* Title: "Coffee", Amount: "-50", Category: "Food" -> Blocked due to negative amount.
+
+
+  ## Feature: Expense List & Items (with Total and Count)
+
+- **Context:** The `ExpenseForm` is built and successfully adding items to state in `App.jsx`. We now need to display those items cleanly and track metrics.
+- **Goal:** Create an `ExpenseList` component that renders a list of `ExpenseItem` components, displaying a running total formatted to 2 decimal places and a count of currently displayed expenses[cite: 1, 2, 3].
+- **Constraints:** 
+  - One component per file (`ExpenseList.jsx` and `ExpenseItem.jsx`)[cite: 2].
+  - Use stable `data-cy` attributes: `data-cy="expense-item"`, `data-cy="count"`, and `data-cy="total"`.
+  - Amount must always be formatted to 2 decimal places (e.g., using `.toFixed(2)`)[cite: 1].
+- **Acceptance Criteria:**
+  1. Renders all provided expenses with their title, formatted amount, and category.
+  2. Displays the correct count of items currently in the list (`data-cy="count"`).
+  3. Calculates and displays the correct running total of all displayed expenses (`data-cy="total"`).
+- **Examples:**
+  - *Input:* Two items—Lunch ($250.00, Food) and Cab ($400.00, Travel).
+  - *Output:* Count shows "2", Total shows "650.00".
+
+---
+
+## Feature: Category Filter
+
+- **Context:** Our expense tracker can add and list multiple expenses, but users need a way to filter them by category[cite: 1, 2].
+- **Goal:** Create a `CategoryFilter` component that allows users to filter the expense list by selecting categories (All, Food, Travel, Bills, Other)[cite: 1, 2].
+- **Constraints:** 
+  - Must use a dropdown select element with `data-cy="filter"`.
+  - State for the active filter must be managed cleanly in `App.jsx` and passed down[cite: 2].
+- **Acceptance Criteria:**
+  1. Default selection is "All", showing every expense.
+  2. Selecting a specific category (e.g., "Food") filters the list to show only items matching that category.
+  3. The displayed count and running total update automatically to reflect only the filtered items.
+- **Examples:**
+  - *Filter "Food":* Hides travel and bills expenses, updates count and total to match only food items.
+
+---
+
+## Feature: Delete Expense
+
+- **Context:** Users need the ability to remove incorrect or unwanted entries from their tracker[cite: 3].
+- **Goal:** Add a delete mechanism to each `ExpenseItem` so users can remove an expense by its unique ID[cite: 3].
+- **Constraints:** 
+  - Pass a deletion callback handler from `App.jsx` down through `ExpenseList` to `ExpenseItem`.
+  - Use stable `data-cy` attributes for delete buttons (e.g., `data-cy="delete-{id}"` or a standard data-cy attribute).
+- **Acceptance Criteria:**
+  1. Clicking the delete button on an expense item removes it permanently from the state/list.
+  2. The visible count and running total update immediately upon deletion.
+- **Examples:**
+  - *Action:* Click delete on a "Cab" expense item.
+  - *Result:* Item disappears from DOM, total decreases by the item's amount, and count decreases by 1.
