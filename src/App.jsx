@@ -1,121 +1,93 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import ExpenseForm from './components/ExpenseForm.jsx'
 import './App.css'
 
+const currency = new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: 'INR',
+  maximumFractionDigits: 2,
+})
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [expenses, setExpenses] = useState([])
+
+  function handleAddExpense(expense) {
+    setExpenses((currentExpenses) => [
+      { ...expense, id: crypto.randomUUID() },
+      ...currentExpenses,
+    ])
+  }
+
+  const total = expenses.reduce((sum, expense) => sum + expense.amount, 0)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <main className="app-shell">
+      <header className="app-header">
+        <div className="brand-mark" aria-hidden="true">₹</div>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <p className="eyebrow">PERSONAL FINANCE</p>
+          <h1>Expense tracker</h1>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <section className="summary-card" aria-label="Spending summary">
+        <div>
+          <p className="eyebrow">TOTAL SPENDING</p>
+          <p className="total-amount">{currency.format(total)}</p>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className="expense-count">
+          <span className="count-number">{expenses.length}</span>
+          <span>{expenses.length === 1 ? 'expense' : 'expenses'}</span>
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <div className="content-grid">
+        <section className="panel form-panel">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">MAKE IT COUNT</p>
+              <h2>Add an expense</h2>
+            </div>
+            <span className="heading-icon" aria-hidden="true">＋</span>
+          </div>
+          <ExpenseForm onAddExpense={handleAddExpense} />
+        </section>
+
+        <section className="panel list-panel" aria-labelledby="expenses-heading">
+          <div className="section-heading list-heading">
+            <div>
+              <p className="eyebrow">YOUR ACTIVITY</p>
+              <h2 id="expenses-heading">Recent expenses</h2>
+            </div>
+            {expenses.length > 0 && <span className="list-badge">{expenses.length} total</span>}
+          </div>
+
+          {expenses.length === 0 ? (
+            <div className="empty-state">
+              <span className="empty-icon" aria-hidden="true">↗</span>
+              <p className="empty-title">Nothing to see yet</p>
+              <p>Your expenses will show up here once you add one.</p>
+            </div>
+          ) : (
+            <ul className="expense-list" aria-live="polite">
+              {expenses.map((expense) => (
+                <li className="expense-row" key={expense.id}>
+                  <span className={`category-icon category-${expense.category.toLowerCase()}`} aria-hidden="true">
+                    {expense.category === 'Food' ? '⌁' : expense.category === 'Travel' ? '↗' : expense.category === 'Bills' ? '▤' : '◦'}
+                  </span>
+                  <span className="expense-details">
+                    <span className="expense-title">{expense.title}</span>
+                    <span className="expense-meta">{expense.category} · {expense.date}</span>
+                  </span>
+                  <span className="expense-amount">−{currency.format(expense.amount)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+      <footer className="app-footer">A clearer picture of where your money goes.</footer>
+    </main>
   )
 }
 
